@@ -188,7 +188,7 @@ public class LoanService implements LoanServiceInterface {
 
     public Set<String> findVehicleModels() {
 
-        //You don't need to use "TreeSet" here. "HashSet" would do find.
+        //You don't need to use "TreeSet" here. "HashSet" would do fine.
         Set<String> numbers = new TreeSet<>();
 
         for (Loan loan : loans) {
@@ -356,7 +356,7 @@ public class LoanService implements LoanServiceInterface {
 
         public int compare(Loan o1, Loan o2) {
 
-            //This is better (see comments in "CarLoan.compareTo(...)")
+            //Way better (see comments in "CarLoan.compareTo(...)")
             int compareResult = returnLoanRiskType(o1.getRiskType()).compareTo(returnLoanRiskType(o2.getRiskType()));
 
             if (compareResult != 0) {
@@ -375,7 +375,7 @@ public class LoanService implements LoanServiceInterface {
 
         }
 
-        //This an acceptable implementation. You can find a better one here (if interested) -
+        //This is a pretty good implementation. You can find a better one here (if interested) -
         // https://github.com/andrewmic/enum-comparator-example/blob/master/src/main/java/lt/itacademy/example/comparator/SwitchlessMappedValueBasedLoanRiskComparator.java
         private Integer returnLoanRiskType(LoanRiskType loanRiskType) {
 
