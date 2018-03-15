@@ -8,6 +8,7 @@ public class VehicleLoan extends Loan {
 
     private Date manufactured;
     private String model;
+    //Age should be a calculated value from "manufactured" and today's date
     private int age;
     private int maximumAge;
 
