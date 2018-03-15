@@ -9,6 +9,7 @@ import java.util.Date;
 public class LoanUtil {
     public static BigDecimal calculateVehicleDepreciation(VehicleLoan loan) {
 
+        //You can return calculation straight away, you don't need an additional local variable here
         BigDecimal vehicleDepreciation;
 
         vehicleDepreciation = loan.getPrice().multiply(
