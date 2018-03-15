@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class RealEstateLoan extends Loan {
 
-
+    //"private" modifiers are missing
     String district;
     float area;
 
