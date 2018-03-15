@@ -9,6 +9,7 @@ public class Loan {
 
     private int termInYears;
     private BigDecimal price;
+    //Naming! Variable names should start from lowercase letter
     private BigDecimal InterestRate;
     private String name;
     private Date creationDate;
@@ -20,6 +21,8 @@ public class Loan {
     }
 
     public void setValid(boolean valid) {
+        //Idea was, that method "isValid()" would calculate if loan is valid or not, in other words, "valid" is not a field/property,
+        // but a calculated value
         isValid = valid;
     }
 
