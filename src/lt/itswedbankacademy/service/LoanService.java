@@ -27,6 +27,7 @@ public class LoanService implements LoanServiceInterface {
 
 
         for (Loan loan : loans) {
+            //For enums, it is more optimal to use "==" instead of "equals"
             if (loan.getRiskType().equals(LoanRiskType.HIGH_RISK)) {
                 highRiskLoans.add(loan);
 
@@ -53,7 +54,8 @@ public class LoanService implements LoanServiceInterface {
         BigDecimal averageLoanCost = BigDecimal.ZERO;
 
         for (Loan loan : loans) {
-
+            //You already have a method for calculating Loan total cost:
+            //averageLoanCost = averageLoanCost.add(loan.calculateTotalCost());
             averageLoanCost = averageLoanCost.add(loan.getPrice().multiply(loan.getInterestRate().divide(new BigDecimal(100), 2, BigDecimal.ROUND_UP))).add(loan.getPrice());
 
         }
@@ -77,6 +79,8 @@ public class LoanService implements LoanServiceInterface {
 
         for (Loan loan : loans) {
             if (loan.getRiskType().equals(loanRiskType)) {
+                //You already have a method for calculating Loan total cost:
+                //averageLoanCost = averageLoanCost.add(loan.calculateTotalCost());
                 averageLoanCost = averageLoanCost.add(loan.getPrice().multiply((loan.getInterestRate().multiply(newInterestRate(loanRiskType))).divide(new BigDecimal(100), 2, BigDecimal.ROUND_UP))).add(loan.getPrice());
                 count++;
             }
@@ -89,6 +93,8 @@ public class LoanService implements LoanServiceInterface {
 
     @Override
     public BigDecimal calculateAverageCostOfHighRiskLoans() {
+        //You already have a method which calculates average loan cost by risk, so use it:
+        //return calcuateAverageLoanCoste(LoanRiskType.HIGH_RISK);
 
         BigDecimal averageLoanCost = BigDecimal.ZERO;
         int count = 0;
@@ -118,6 +124,7 @@ public class LoanService implements LoanServiceInterface {
 
         BigDecimal max = BigDecimal.ZERO;
         for (Loan loan : loans) {
+            //This check should be implemented in "Loan.isValid()"
             if (DateUtil.differenceInDays(new Date(), DateUtil.addYears(loan.getCreationDate(), loan.getTermInYears())) < 0) {
                 if (max.compareTo(loan.getPrice()) < 0) {
                     max = loan.getPrice();
@@ -129,9 +136,13 @@ public class LoanService implements LoanServiceInterface {
 
     public Map<LoanRiskType, List<Loan>> groupLoansByRiskType() {
 
+        //Wow, wow, wow! This is way too complicated than it needs to be :)
+        //Plus, it will not work correctly if a new "LoanRiskType" would be introduced.
+
         Map<LoanRiskType, List<Loan>> loansByRiskType = new HashMap<>();
         //   Map<LoanRiskType, List<Loan>> loansByRiskType = new HashMap<>();
 
+        //This is a correct implementation. Don't know why it is commented though
         // for(Loan loan : loans){
         //      if(!loansByRiskType.containsKey(loan.getRiskType())){
         //           loansByRiskType.put(loan.getRiskType(), new ArrayList<>());
@@ -177,6 +188,7 @@ public class LoanService implements LoanServiceInterface {
 
     public Set<String> findVehicleModels() {
 
+        //You don't need to use "TreeSet" here. "HashSet" would do find.
         Set<String> numbers = new TreeSet<>();
 
         for (Loan loan : loans) {
@@ -188,6 +200,7 @@ public class LoanService implements LoanServiceInterface {
     }
 
 
+    //I think this should be implemented in "VehicleLoan.setInterestRate(...)"
     public BigDecimal newInterestRate(LoanRiskType loanRiskType) {
 
         BigDecimal newInterestRate = BigDecimal.ZERO;
@@ -203,6 +216,7 @@ public class LoanService implements LoanServiceInterface {
 
     //////-----
     @Override
+    //I don't remember this to be in assignment :)
     public BigDecimal calculateAverageCostOfPreferredRiskLoans(LoanRiskType loanRiskType) {
 
         BigDecimal finalLoan;
@@ -240,6 +254,7 @@ public class LoanService implements LoanServiceInterface {
         Collection<Loan> expiredLandLoansInReservation = new ArrayList<>();
         for (Loan loan : loans) {
             validateDate(loan);
+            //Correct, "loan.isValid()" should be used here
             if ((loan instanceof LandLoan) && !loan.isValid() && ((LandLoan) loan).isInReservation()) {
                 expiredLandLoansInReservation.add(loan);
             }
@@ -263,6 +278,8 @@ public class LoanService implements LoanServiceInterface {
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
+        //You don't need to convert "new Date()" to String and then turn it back into Date. Pass "new Date()" directly:
+        // DateUtil.differenceInDays(dateAfter, new Date())
         Date todayDate = DateUtil.getDateFromString(df.format(new Date()));
         loan.setValid(DateUtil.differenceInDays(dateAfter, todayDate) >= 0);
     }
@@ -271,6 +288,7 @@ public class LoanService implements LoanServiceInterface {
     public List<Loan> getExpiredHighRiskVehicleLoansOfHighestDuration() {
         int highestDuration = -1;
         for (Loan loan : loans) {
+            //I think this line should not be here:
             loan.isValid();
             if ((loan instanceof VehicleLoan) && !loan.isValid() && (loan.getTermInYears() > highestDuration)) {
                 highestDuration = loan.getTermInYears();
@@ -314,6 +332,7 @@ public class LoanService implements LoanServiceInterface {
         int max = 0;
         for (Loan loan : loans) {
             if (loan instanceof VehicleLoan && loan.getRiskType().equals(LoanRiskType.LOW_RISK)) {
+                //I think this line should not be here:
                 ((VehicleLoan) loan).getAge();
                 if (max < ((VehicleLoan) loan).getAge()) {
                     max = ((VehicleLoan) loan).getAge();
@@ -330,12 +349,14 @@ public class LoanService implements LoanServiceInterface {
         return prioritizeLoans;
     }
 
+    //I would recommend extracting this class into a separate file
     private class LoanComparator implements Comparator<Loan> {
 
         @Override
 
         public int compare(Loan o1, Loan o2) {
 
+            //This is better (see comments in "CarLoan.compareTo(...)")
             int compareResult = returnLoanRiskType(o1.getRiskType()).compareTo(returnLoanRiskType(o2.getRiskType()));
 
             if (compareResult != 0) {
@@ -354,6 +375,8 @@ public class LoanService implements LoanServiceInterface {
 
         }
 
+        //This an acceptable implementation. You can find a better one here (if interested) -
+        // https://github.com/andrewmic/enum-comparator-example/blob/master/src/main/java/lt/itacademy/example/comparator/SwitchlessMappedValueBasedLoanRiskComparator.java
         private Integer returnLoanRiskType(LoanRiskType loanRiskType) {
 
             switch (loanRiskType) {
