@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
+//This interface should be located in "lt.itswedbankacademy.service" package
 public interface LoanServiceInterface {
 
     Collection<Loan> getLoansOfHigherThanAverageDepreciation();
